@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for All files</title>
+    <meta charset="utf-8">
+    <style>
+        body, html {
+            margin:0; padding: 0;
+        }
+        body {
+            font-family: Arial, Helvetica;
+            font-size: 10pt;
+        }
+        div.header, div.footer {
+            background: #eee;
+            padding: 1em;
+        }
+        div.header {
+            height: 160px;
+            padding: 0 1em 0 1em;
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            border-bottom: 1px solid #666;
+            width: 100%;
+        }
+        div.footer {
+            border-top: 1px solid #666;
+        }
+        div.body {
+            margin-top: 170px;
+        }
+        div.meta {
+            font-size: 90%;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+        h1 {
+            font-size: 12pt;
+        }
+        h2 {
+            font-size: 10pt;
+        }
+        pre {
+            font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            tab-size: 2;
+        }
+
+        div.path { font-size: 110%; }
+        div.path a:link, div.path a:visited { color: #000; }
+        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
+
+        table.coverage td {
+            margin: 0;
+            padding: 0;
+            color: #111;
+            vertical-align: top;
+        }
+        table.coverage td.line-count {
+            width: 50px;
+            text-align: right;
+            padding-right: 5px;
+        }
+        table.coverage td.line-coverage {
+            color: #777 !important;
+            text-align: right;
+            border-left: 1px solid #666;
+            border-right: 1px solid #666;
+        }
+
+        table.coverage td.text {
+        }
+
+        table.coverage td span.cline-any {
+            display: inline-block;
+            padding: 0 5px;
+            width: 40px;
+        }
+        table.coverage td span.cline-neutral {
+            background: #eee;
+        }
+        table.coverage td span.cline-yes {
+            background: #b5d592;
+            color: #999;
+        }
+        table.coverage td span.cline-no {
+            background: #fc8c84;
+        }
+
+        .cstat-yes { color: #111; }
+        .cstat-no { background: #fc8c84; color: #111; }
+        .fstat-no { background: #ffc520; color: #111 !important; }
+        .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
+        .missing-if-branch {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: black;
+            color: yellow;
+        }
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
+            color: inherit !important;
+        }
+
+        .entity, .metric { font-weight: bold; }
+        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
+        .metric small { font-size: 80%; font-weight: normal; color: #666; }
+
+        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
+        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
+        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
+        div.coverage-summary th.file { border-right: none !important; }
+        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
+        div.coverage-summary th.pct { border-right: none !important; }
+        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
+        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
+        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
+        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
+        div.coverage-summary td.pic { min-width: 120px !important;  }
+        div.coverage-summary a:link { color: #000; }
+        div.coverage-summary a:visited { color: #333; }
+        div.coverage-summary tfoot td { border-top: 1px solid #666; }
+
+        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
+            height: 10px;
+            width: 7px;
+            display: inline-block;
+            margin-left: 0.5em;
+        }
+        div.coverage-summary .yui3-datatable-sort-indicator {
+            background: no-repeat scroll 0 0 transparent;
+        }
+        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
+            background-position: 0 -20px;
+        }
+        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
+            background-position: 0 -10px;
+        }
+
+        .high { background: #b5d592 !important; }
+        .medium { background: #ffe87c !important; }
+        .low { background: #fc8c84 !important; }
+
+        span.cover-fill, span.cover-empty {
+            display:inline-block;
+            border:1px solid #444;
+            background: white;
+            height: 12px;
+        }
+        span.cover-fill {
+            background: #ccc;
+            border-right: 1px solid #444;
+        }
+        span.cover-empty {
+            background: white;
+            border-left: none;
+        }
+        span.cover-full {
+            border-right: none !important;
+        }
+        pre.prettyprint {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1 style="font-weight: bold;">
+        <a href="https://github.com/npmtest/node-npmtest-restle">npmtest-restle (v0.0.1)</a>
+    </h1>
+    <h1>Code coverage report for <span class="entity">All files</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">29.71% <small>(1485 / 4998)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">13.93% <small>(305 / 2190)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">15.22% <small>(132 / 867)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">29.5% <small>(1362 / 4617)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric">26 statements, 1 function, 30 branches</span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"></div>
+</div>
+<div class="body">
+<div class="coverage-summary">
+<table>
+<thead>
+<tr>
+   <th data-col="file" data-fmt="html" data-html="true" class="file">File</th>
+   <th data-col="pic" data-type="number" data-fmt="html" data-html="true" class="pic"></th>
+   <th data-col="statements" data-type="number" data-fmt="pct" class="pct">Statements</th>
+   <th data-col="statements_raw" data-type="number" data-fmt="html" class="abs"></th>
+   <th data-col="branches" data-type="number" data-fmt="pct" class="pct">Branches</th>
+   <th data-col="branches_raw" data-type="number" data-fmt="html" class="abs"></th>
+   <th data-col="functions" data-type="number" data-fmt="pct" class="pct">Functions</th>
+   <th data-col="functions_raw" data-type="number" data-fmt="html" class="abs"></th>
+   <th data-col="lines" data-type="number" data-fmt="pct" class="pct">Lines</th>
+   <th data-col="lines_raw" data-type="number" data-fmt="html" class="abs"></th>
+</tr>
+</thead>
+<tbody><tr>
+	<td class="file high" data-value="node-npmtest-restle/"><a href="node-npmtest-restle/index.html">node-npmtest-restle/</a></td>
+	<td data-value="100" class="pic high"><span class="cover-fill cover-full" style="width: 100px;"></span><span class="cover-empty" style="width:0px;"></span></td>
+	<td data-value="100" class="pct high">100%</td>
+	<td data-value="153" class="abs high">(153&nbsp;/&nbsp;153)</td>
+	<td data-value="100" class="pct high">100%</td>
+	<td data-value="126" class="abs high">(126&nbsp;/&nbsp;126)</td>
+	<td data-value="100" class="pct high">100%</td>
+	<td data-value="28" class="abs high">(28&nbsp;/&nbsp;28)</td>
+	<td data-value="100" class="pct high">100%</td>
+	<td data-value="153" class="abs high">(153&nbsp;/&nbsp;153)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle-error/"><a href="node-npmtest-restle/node_modules/restle-error/index.html">node-npmtest-restle/node_modules/restle-error/</a></td>
+	<td data-value="22.78" class="pic low"><span class="cover-fill" style="width: 22px;"></span><span class="cover-empty" style="width:78px;"></span></td>
+	<td data-value="22.78" class="pct low">22.78%</td>
+	<td data-value="79" class="abs low">(18&nbsp;/&nbsp;79)</td>
+	<td data-value="0" class="pct low">0%</td>
+	<td data-value="28" class="abs low">(0&nbsp;/&nbsp;28)</td>
+	<td data-value="0" class="pct low">0%</td>
+	<td data-value="7" class="abs low">(0&nbsp;/&nbsp;7)</td>
+	<td data-value="24.66" class="pct low">24.66%</td>
+	<td data-value="73" class="abs low">(18&nbsp;/&nbsp;73)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle-memory/dist/lib/"><a href="node-npmtest-restle/node_modules/restle-memory/dist/lib/index.html">node-npmtest-restle/node_modules/restle-memory/dist/lib/</a></td>
+	<td data-value="23.87" class="pic low"><span class="cover-fill" style="width: 23px;"></span><span class="cover-empty" style="width:77px;"></span></td>
+	<td data-value="23.87" class="pct low">23.87%</td>
+	<td data-value="155" class="abs low">(37&nbsp;/&nbsp;155)</td>
+	<td data-value="8.7" class="pct low">8.7%</td>
+	<td data-value="92" class="abs low">(8&nbsp;/&nbsp;92)</td>
+	<td data-value="19.23" class="pct low">19.23%</td>
+	<td data-value="26" class="abs low">(5&nbsp;/&nbsp;26)</td>
+	<td data-value="20.54" class="pct low">20.54%</td>
+	<td data-value="112" class="abs low">(23&nbsp;/&nbsp;112)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle-memory/dist/lib/helpers/"><a href="node-npmtest-restle/node_modules/restle-memory/dist/lib/helpers/index.html">node-npmtest-restle/node_modules/restle-memory/dist/lib/helpers/</a></td>
+	<td data-value="21.18" class="pic low"><span class="cover-fill" style="width: 21px;"></span><span class="cover-empty" style="width:79px;"></span></td>
+	<td data-value="21.18" class="pct low">21.18%</td>
+	<td data-value="85" class="abs low">(18&nbsp;/&nbsp;85)</td>
+	<td data-value="0" class="pct low">0%</td>
+	<td data-value="41" class="abs low">(0&nbsp;/&nbsp;41)</td>
+	<td data-value="0" class="pct low">0%</td>
+	<td data-value="9" class="abs low">(0&nbsp;/&nbsp;9)</td>
+	<td data-value="23.08" class="pct low">23.08%</td>
+	<td data-value="78" class="abs low">(18&nbsp;/&nbsp;78)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle-memory/node_modules/bluebird/js/release/"><a href="node-npmtest-restle/node_modules/restle-memory/node_modules/bluebird/js/release/index.html">node-npmtest-restle/node_modules/restle-memory/node_modules/bluebird/js/release/</a></td>
+	<td data-value="27.27" class="pic low"><span class="cover-fill" style="width: 27px;"></span><span class="cover-empty" style="width:73px;"></span></td>
+	<td data-value="27.27" class="pct low">27.27%</td>
+	<td data-value="3330" class="abs low">(908&nbsp;/&nbsp;3330)</td>
+	<td data-value="6.59" class="pct low">6.59%</td>
+	<td data-value="1365" class="abs low">(90&nbsp;/&nbsp;1365)</td>
+	<td data-value="10.7" class="pct low">10.7%</td>
+	<td data-value="570" class="abs low">(61&nbsp;/&nbsp;570)</td>
+	<td data-value="28.03" class="pct low">28.03%</td>
+	<td data-value="3204" class="abs low">(898&nbsp;/&nbsp;3204)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/bin/cli/"><a href="node-npmtest-restle/node_modules/restle/bin/cli/index.html">node-npmtest-restle/node_modules/restle/bin/cli/</a></td>
+	<td data-value="23.81" class="pic low"><span class="cover-fill" style="width: 23px;"></span><span class="cover-empty" style="width:77px;"></span></td>
+	<td data-value="23.81" class="pct low">23.81%</td>
+	<td data-value="21" class="abs low">(5&nbsp;/&nbsp;21)</td>
+	<td data-value="0" class="pct low">0%</td>
+	<td data-value="4" class="abs low">(0&nbsp;/&nbsp;4)</td>
+	<td data-value="0" class="pct low">0%</td>
+	<td data-value="3" class="abs low">(0&nbsp;/&nbsp;3)</td>
+	<td data-value="25" class="pct low">25%</td>
+	<td data-value="20" class="abs low">(5&nbsp;/&nbsp;20)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/index.html">node-npmtest-restle/node_modules/restle/dist/lib/</a></td>
+	<td data-value="37.41" class="pic low"><span class="cover-fill" style="width: 37px;"></span><span class="cover-empty" style="width:63px;"></span></td>
+	<td data-value="37.41" class="pct low">37.41%</td>
+	<td data-value="139" class="abs low">(52&nbsp;/&nbsp;139)</td>
+	<td data-value="25.93" class="pct low">25.93%</td>
+	<td data-value="54" class="abs low">(14&nbsp;/&nbsp;54)</td>
+	<td data-value="25" class="pct low">25%</td>
+	<td data-value="24" class="abs low">(6&nbsp;/&nbsp;24)</td>
+	<td data-value="37.78" class="pct low">37.78%</td>
+	<td data-value="90" class="abs low">(34&nbsp;/&nbsp;90)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/model/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/model/index.html">node-npmtest-restle/node_modules/restle/dist/lib/model/</a></td>
+	<td data-value="42.68" class="pic low"><span class="cover-fill" style="width: 42px;"></span><span class="cover-empty" style="width:58px;"></span></td>
+	<td data-value="42.68" class="pct low">42.68%</td>
+	<td data-value="82" class="abs low">(35&nbsp;/&nbsp;82)</td>
+	<td data-value="17.78" class="pct low">17.78%</td>
+	<td data-value="45" class="abs low">(8&nbsp;/&nbsp;45)</td>
+	<td data-value="21.74" class="pct low">21.74%</td>
+	<td data-value="23" class="abs low">(5&nbsp;/&nbsp;23)</td>
+	<td data-value="32.79" class="pct low">32.79%</td>
+	<td data-value="61" class="abs low">(20&nbsp;/&nbsp;61)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/model/relationship/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/model/relationship/index.html">node-npmtest-restle/node_modules/restle/dist/lib/model/relationship/</a></td>
+	<td data-value="24.2" class="pic low"><span class="cover-fill" style="width: 24px;"></span><span class="cover-empty" style="width:76px;"></span></td>
+	<td data-value="24.2" class="pct low">24.2%</td>
+	<td data-value="157" class="abs low">(38&nbsp;/&nbsp;157)</td>
+	<td data-value="10.71" class="pct low">10.71%</td>
+	<td data-value="84" class="abs low">(9&nbsp;/&nbsp;84)</td>
+	<td data-value="19.23" class="pct low">19.23%</td>
+	<td data-value="26" class="abs low">(5&nbsp;/&nbsp;26)</td>
+	<td data-value="18.25" class="pct low">18.25%</td>
+	<td data-value="126" class="abs low">(23&nbsp;/&nbsp;126)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/model/resource-array/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/model/resource-array/index.html">node-npmtest-restle/node_modules/restle/dist/lib/model/resource-array/</a></td>
+	<td data-value="35.35" class="pic low"><span class="cover-fill" style="width: 35px;"></span><span class="cover-empty" style="width:65px;"></span></td>
+	<td data-value="35.35" class="pct low">35.35%</td>
+	<td data-value="99" class="abs low">(35&nbsp;/&nbsp;99)</td>
+	<td data-value="18.87" class="pct low">18.87%</td>
+	<td data-value="53" class="abs low">(10&nbsp;/&nbsp;53)</td>
+	<td data-value="45.45" class="pct low">45.45%</td>
+	<td data-value="11" class="abs low">(5&nbsp;/&nbsp;11)</td>
+	<td data-value="25.97" class="pct low">25.97%</td>
+	<td data-value="77" class="abs low">(20&nbsp;/&nbsp;77)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/model/resource/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/model/resource/index.html">node-npmtest-restle/node_modules/restle/dist/lib/model/resource/</a></td>
+	<td data-value="30.82" class="pic low"><span class="cover-fill" style="width: 30px;"></span><span class="cover-empty" style="width:70px;"></span></td>
+	<td data-value="30.82" class="pct low">30.82%</td>
+	<td data-value="146" class="abs low">(45&nbsp;/&nbsp;146)</td>
+	<td data-value="14.06" class="pct low">14.06%</td>
+	<td data-value="64" class="abs low">(9&nbsp;/&nbsp;64)</td>
+	<td data-value="23.81" class="pct low">23.81%</td>
+	<td data-value="21" class="abs low">(5&nbsp;/&nbsp;21)</td>
+	<td data-value="25" class="pct low">25%</td>
+	<td data-value="120" class="abs low">(30&nbsp;/&nbsp;120)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/model/resource/utils/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/model/resource/utils/index.html">node-npmtest-restle/node_modules/restle/dist/lib/model/resource/utils/</a></td>
+	<td data-value="32.94" class="pic low"><span class="cover-fill" style="width: 32px;"></span><span class="cover-empty" style="width:68px;"></span></td>
+	<td data-value="32.94" class="pct low">32.94%</td>
+	<td data-value="85" class="abs low">(28&nbsp;/&nbsp;85)</td>
+	<td data-value="17.78" class="pct low">17.78%</td>
+	<td data-value="45" class="abs low">(8&nbsp;/&nbsp;45)</td>
+	<td data-value="25" class="pct low">25%</td>
+	<td data-value="8" class="abs low">(2&nbsp;/&nbsp;8)</td>
+	<td data-value="32.5" class="pct low">32.5%</td>
+	<td data-value="80" class="abs low">(26&nbsp;/&nbsp;80)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/router/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/router/index.html">node-npmtest-restle/node_modules/restle/dist/lib/router/</a></td>
+	<td data-value="15.08" class="pic low"><span class="cover-fill" style="width: 15px;"></span><span class="cover-empty" style="width:85px;"></span></td>
+	<td data-value="15.08" class="pct low">15.08%</td>
+	<td data-value="325" class="abs low">(49&nbsp;/&nbsp;325)</td>
+	<td data-value="7.84" class="pct low">7.84%</td>
+	<td data-value="102" class="abs low">(8&nbsp;/&nbsp;102)</td>
+	<td data-value="5.49" class="pct low">5.49%</td>
+	<td data-value="91" class="abs low">(5&nbsp;/&nbsp;91)</td>
+	<td data-value="12.11" class="pct low">12.11%</td>
+	<td data-value="289" class="abs low">(35&nbsp;/&nbsp;289)</td>
+	</tr>
+
+<tr>
+	<td class="file low" data-value="node-npmtest-restle/node_modules/restle/dist/lib/router/utils/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/router/utils/index.html">node-npmtest-restle/node_modules/restle/dist/lib/router/utils/</a></td>
+	<td data-value="38.89" class="pic low"><span class="cover-fill" style="width: 38px;"></span><span class="cover-empty" style="width:62px;"></span></td>
+	<td data-value="38.89" class="pct low">38.89%</td>
+	<td data-value="90" class="abs low">(35&nbsp;/&nbsp;90)</td>
+	<td data-value="12.77" class="pct low">12.77%</td>
+	<td data-value="47" class="abs low">(6&nbsp;/&nbsp;47)</td>
+	<td data-value="16.67" class="pct low">16.67%</td>
+	<td data-value="12" class="abs low">(2&nbsp;/&nbsp;12)</td>
+	<td data-value="37.93" class="pct low">37.93%</td>
+	<td data-value="87" class="abs low">(33&nbsp;/&nbsp;87)</td>
+	</tr>
+
+<tr>
+	<td class="file medium" data-value="node-npmtest-restle/node_modules/restle/dist/lib/utils/"><a href="node-npmtest-restle/node_modules/restle/dist/lib/utils/index.html">node-npmtest-restle/node_modules/restle/dist/lib/utils/</a></td>
+	<td data-value="55.77" class="pic medium"><span class="cover-fill" style="width: 55px;"></span><span class="cover-empty" style="width:45px;"></span></td>
+	<td data-value="55.77" class="pct medium">55.77%</td>
+	<td data-value="52" class="abs medium">(29&nbsp;/&nbsp;52)</td>
+	<td data-value="22.5" class="pct low">22.5%</td>
+	<td data-value="40" class="abs low">(9&nbsp;/&nbsp;40)</td>
+	<td data-value="37.5" class="pct low">37.5%</td>
+	<td data-value="8" class="abs low">(3&nbsp;/&nbsp;8)</td>
+	<td data-value="55.32" class="pct medium">55.32%</td>
+	<td data-value="47" class="abs medium">(26&nbsp;/&nbsp;47)</td>
+	</tr>
+
+</tbody>
+</table>
+</div></div>
+<div class="footer">
+    <div class="meta">Generated by <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a> at Fri Apr 21 2017 14:36:26 GMT+0000 (UTC)</div>
+</div>
+</body>
+</html>
